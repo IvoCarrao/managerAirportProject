@@ -207,7 +207,7 @@ public class AirplaneVerifierTest {
     public void getAirplaneTest_OK() {
 
         ResponseConnector responseConnector = ResponseConnectorFactory.createResponseConnector(true, "find airplane, operation successfully");
-        Pair<ResponseConnector, InterfaceModel> response = new Pair<>(responseConnector, new Airplane(8,"Embraer",1987, false));
+        Pair<ResponseConnector, InterfaceModel> response = new Pair<>(responseConnector, (InterfaceModel) new Airplane(8,"Embraer",1987, false));
 
         airplaneVerifier = new AirplaneVerifier(new Request(RequestType.GET, null, 8));
         try {
@@ -233,7 +233,7 @@ public class AirplaneVerifierTest {
     @Test
     public void getAirplaneTest_KO() {
         ResponseConnector responseConnector = ResponseConnectorFactory.createResponseConnector(true, "Find failed - ID doesn't exist");
-        Pair<ResponseConnector, InterfaceModel> response = new Pair<>(responseConnector, new Airplane(4,"Embraer",1987, false));
+        Pair<ResponseConnector, InterfaceModel> response = new Pair<>(responseConnector, (InterfaceModel) new Airplane(4,"Embraer",1987, false));
 
         airplaneVerifier = new AirplaneVerifier(new Request(RequestType.GET, null, 4));
         try {

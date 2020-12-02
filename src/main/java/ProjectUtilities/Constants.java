@@ -9,5 +9,7 @@ public abstract  class Constants {
     public static String INVALID_ID_ERROR = "Invalid ID";
     public static String VALID_REQUEST = "Request is valid";
     public static String INVALID_QUERY_PARAMETER = "Invalid query parameter";
+    public static String INVALID_CITY_NAME = "Invalid city name";
+    public static String INVALID_AIRPORT_NAME = "Invalid airport name";
 
 }
