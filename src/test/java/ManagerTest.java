@@ -1,15 +1,14 @@
-import Model.Airplane;
+import com.airportmanagement.Model.Airplane;
 
-import Model.Airport;
-import Persistence.ClassesToPersist;
-import Persistence.PersistenceAirplaneProxy;
-import Persistence.PersistenceAirportProxy;
-import ProjectUtilities.ResponseConnector;
-import ProjectUtilities.ResponseConnectorFactory;
-import Persistence.Manager;
-import ProjectUtilities.Pair;
+import com.airportmanagement.Model.Airport;
+import com.airportmanagement.Persistence.ClassesToPersist;
+import com.airportmanagement.Persistence.PersistenceAirplaneProxy;
+import com.airportmanagement.Persistence.PersistenceAirportProxy;
+import com.airportmanagement.ProjectUtilities.ResponseConnector;
+import com.airportmanagement.ProjectUtilities.ResponseConnectorFactory;
+import com.airportmanagement.Persistence.Manager;
+import com.airportmanagement.ProjectUtilities.Pair;
 import org.easymock.EasyMock;
-import Exception.ModelTypeException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -49,7 +48,7 @@ public class ManagerTest {
      * Test where we insert one airplane with id that is already persisted
      */
     @Test
-    public void insertAirplane_TestKO() throws ModelTypeException {
+    public void insertAirplane_TestKO() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(false, "id already exists");
         Airplane airplaneToInsert = new Airplane(123, "Embraer505", 1998, false);
@@ -70,7 +69,7 @@ public class ManagerTest {
      * Test where we insert one airplane with id that is accepted
      */
     @Test
-    public void insertAirplane_TestOK() throws ModelTypeException {
+    public void insertAirplane_TestOK() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(true, "id persisted");
         Airplane airplaneToInsert = new Airplane(123, "Embraer505", 1998, false);
@@ -91,7 +90,7 @@ public class ManagerTest {
      * Test where we insert one airport with id that is already persisted
      */
     @Test
-    public void insertAirport_TestKO() throws ModelTypeException {
+    public void insertAirport_TestKO() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(false, "id already exists");
         Airport airportToInsert = new Airport(123, "InternationalAirport", "Panama City");
@@ -112,7 +111,7 @@ public class ManagerTest {
      * Test where we insert one airport with id that is accepted
      */
     @Test
-    public void insertAirport_TestOK() throws ModelTypeException {
+    public void insertAirport_TestOK() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(true, "id persisted");
         Airport airportToInsert = new Airport(123, "InternationalAirport", "Panama City");
@@ -133,7 +132,7 @@ public class ManagerTest {
      * Test where we update one airport with id that is accepted
      */
     @Test
-    public void updateAirport_TestOK() throws ModelTypeException {
+    public void updateAirport_TestOK() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(true, "airport updated, operation successfully");
         Airport airportToInsert = new Airport(123, "InternationalAirport", "Panama City");
@@ -155,7 +154,7 @@ public class ManagerTest {
      * Test where we update one airport with id that is already persisted
      */
     @Test
-    public void updateAirport_TestKO() throws ModelTypeException {
+    public void updateAirport_TestKO() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(false, "Update failed - id doesn't exist");
         Airport airportToInsert = new Airport(123, "InternationalAirport", "Panama City");
@@ -177,7 +176,7 @@ public class ManagerTest {
      * Test where we update one airplane with id that is already persisted
      */
     @Test
-    public void updateAirplane_TestKO() throws ModelTypeException {
+    public void updateAirplane_TestKO() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(false, "Update failed - id doesn't exist");
         Airplane airplaneToInsert = new Airplane(123, "Embraer505", 1998, false);
@@ -198,7 +197,7 @@ public class ManagerTest {
      * Test where we update one airplane with id that is accepted
      */
     @Test
-    public void updateAirplane_TestOK() throws ModelTypeException {
+    public void updateAirplane_TestOK() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(true, "airplane updated, operation successfully");
         Airplane airplaneToInsert = new Airplane(123, "Embraer505", 1998, false);
@@ -219,7 +218,7 @@ public class ManagerTest {
      * Test where we delete one airport with id that is accepted
      */
     @Test
-    public void deleteAirport_TestOK() throws ModelTypeException {
+    public void deleteAirport_TestOK() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(true, "airport updated, operation successfully");
 
@@ -238,7 +237,7 @@ public class ManagerTest {
      * Test where we delete one airport with id that is already persisted
      */
     @Test
-    public void deleteAirport_TestKO() throws ModelTypeException {
+    public void deleteAirport_TestKO() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(false, "Delete failed - ID doesn't exist");
 
@@ -257,7 +256,7 @@ public class ManagerTest {
      * Test where we delete one airplane with id that is already persisted
      */
     @Test
-    public void deleteAirplane_TestKO() throws ModelTypeException {
+    public void deleteAirplane_TestKO() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(false, "Delete failed - ID doesn't exist");
 
@@ -275,7 +274,7 @@ public class ManagerTest {
      * Test where we delete one airplane with id that is accepted
      */
     @Test
-    public void deleteAirplane_TestOK() throws ModelTypeException {
+    public void deleteAirplane_TestOK() {
 
         ResponseConnector response = ResponseConnectorFactory.createResponseConnector(true, "airplane deleted, operation successfully");
 
@@ -293,7 +292,7 @@ public class ManagerTest {
      * Test where we find one airplane with id that is accepted
      */
     @Test
-    public void findAirplaneById_TestOK() throws ModelTypeException {
+    public void findAirplaneById_TestOK() {
         Airplane airplane = new Airplane(22, "Embraer505", 1998, false);
         Pair<ResponseConnector, Airplane> response = new Pair<>(ResponseConnectorFactory.createResponseConnector(true, "find airplane, operation successfully"), airplane);
 
@@ -313,7 +312,7 @@ public class ManagerTest {
      * Test where we find one airplane with id that doesn't exist
      */
     @Test
-    public void findAirplaneById_TestKO() throws ModelTypeException {
+    public void findAirplaneById_TestKO() {
 
         Pair<ResponseConnector, Airplane> response = new Pair<>(ResponseConnectorFactory.createResponseConnector(false, "Find failed - ID doesn't exist"), null);
 
@@ -332,7 +331,7 @@ public class ManagerTest {
      * Test where we find one airport with id that doesn't exist
      */
     @Test
-    public void findAirportById_TestKO() throws ModelTypeException {
+    public void findAirportById_TestKO() {
 
         Pair<ResponseConnector, Airport> response = new Pair<>(ResponseConnectorFactory.createResponseConnector(false, "Find failed - ID doesn't exist"), null);
 
@@ -351,7 +350,7 @@ public class ManagerTest {
      * Test where we find one airport with id that is accepted
      */
     @Test
-    public void findAirportById_TestOK() throws ModelTypeException {
+    public void findAirportById_TestOK() {
 
         Airport airport = new Airport(22, "International", "Lagos");
         Pair<ResponseConnector, Airport> response = new Pair<>(ResponseConnectorFactory.createResponseConnector(true, "find airport, operation successfully"), airport);
