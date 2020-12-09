@@ -1,9 +1,13 @@
 package com.airportmanagement.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Airport extends Model {
-    public Airport(Integer id,String name, String city) {
+    public Airport(@JsonProperty("id") Integer id,
+                   @JsonProperty("name") String name,
+                   @JsonProperty("city") String city) {
         this.name = name;
         this.city = city;
         this.id = id;

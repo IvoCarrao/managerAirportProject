@@ -64,9 +64,10 @@ public class AirportPersistenceConnector implements InterfacePersistenceAriportC
     @Override
     public ResponseConnector deleteById(Integer id) {
         if (listOfIds.contains(id)) {
-            for (Airport port : airportList) {
-                if (port.getId().equals(id)) {
-                    airportList.remove(port);
+            for (Airport airport : airportList) {
+                if (airport.getId().equals(id)) {
+                    airportList.remove(airport);
+                    listOfIds.remove(id);
 
                     return ResponseConnectorFactory.createResponseConnector(true, "airport deleted, operation successfully");
                 }
