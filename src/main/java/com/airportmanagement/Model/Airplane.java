@@ -1,5 +1,7 @@
 package com.airportmanagement.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Airplane extends Model {
@@ -8,7 +10,10 @@ public class Airplane extends Model {
     private Integer yearMade;
     private boolean isInTheAir;
 
-    public Airplane(Integer id, String brand, int yearMade, boolean isInTheAir) {
+    public Airplane(@JsonProperty("id")Integer id,
+                    @JsonProperty("brand")String brand,
+                    @JsonProperty("yearMade")int yearMade,
+                    @JsonProperty("isInTheAir") boolean isInTheAir) {
         this.id = id;
         this.brand = brand;
         this.yearMade = yearMade;

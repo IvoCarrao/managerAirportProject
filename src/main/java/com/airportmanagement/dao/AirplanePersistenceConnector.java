@@ -68,6 +68,7 @@ public class AirplanePersistenceConnector implements InterfacePersistenceAirplan
             for (Airplane plane : airplaneList) {
                 if (plane.getId().equals(id)) {
                     airplaneList.remove(plane);
+                    listOfIds.remove(id);
 
                     return ResponseConnectorFactory.createResponseConnector(true, "airplane deleted, operation successfully");
                 }
