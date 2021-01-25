@@ -35,9 +35,7 @@ public class AirportVerifierTest {
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.POST, new Airport(1231, "International", "Havana"), null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertNull(actualResponse.getMessage());
         Assert.assertTrue(actualResponse.isOperationSuccess());
@@ -48,14 +46,12 @@ public class AirportVerifierTest {
      * Test where we do a POST without success because the request type is null
      */
     @Test
-    public void addAirportTest_KO_Request_Type_Null() {
+    public void airportTest_KO_Request_Type_Null() {
 
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(null, new Airport(1231, "International", "Havana"), null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertEquals("Request without a request type or a body",actualResponse.getMessage());
         Assert.assertFalse(actualResponse.isOperationSuccess());
@@ -66,14 +62,12 @@ public class AirportVerifierTest {
      * Test where we do a POST without success because the request object is null
      */
     @Test
-    public void addAirportTest_KO_Request_Object_Null() {
+    public void airportTest_KO_Request_Object_Null() {
 
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.POST, null, null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertEquals("Request without a request type or a body",actualResponse.getMessage());
         Assert.assertFalse(actualResponse.isOperationSuccess());
@@ -89,9 +83,7 @@ public class AirportVerifierTest {
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.PUT, new Airport(1231, "International", "Havana"), null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertNull(actualResponse.getMessage());
         Assert.assertTrue(actualResponse.isOperationSuccess());
@@ -99,53 +91,15 @@ public class AirportVerifierTest {
     }
 
     /**
-     * Test where we do a PUT without success because the request type is null
-     */
-    @Test
-    public void updateAirportTest_KO_Request_Type_Null() {
-
-        airportVerifier = new AirportVerifier();
-        airportVerifier.setRequest(new Request<>(null, new Airport(1231, "International", "Havana"), null));
-
-        PowerMock.replayAll();
-        CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
-
-        Assert.assertEquals("Request without a request type or a body",actualResponse.getMessage());
-        Assert.assertFalse(actualResponse.isOperationSuccess());
-        Assert.assertNull(actualResponse.getRequestedObject());
-    }
-
-    /**
-     * Test where we do a POST without success because the request object is null
-     */
-    @Test
-    public void updateAirportTest_KO_Request_Object_Null() {
-
-        airportVerifier = new AirportVerifier();
-        airportVerifier.setRequest(new Request<>(RequestType.POST, null, null));
-
-        PowerMock.replayAll();
-        CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
-
-        Assert.assertEquals("Request without a request type or a body",actualResponse.getMessage());
-        Assert.assertFalse(actualResponse.isOperationSuccess());
-        Assert.assertNull(actualResponse.getRequestedObject());
-    }
-
-    /**
      * Test where we do a POST without success because the airport name is null
      */
     @Test
-    public void updateAirportTest_KO_Airport_name_Null() {
+    public void airportTest_KO_Airport_name_Null() {
 
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.POST, new Airport(1231, null, "Havana"), null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertEquals("Invalid airport name",actualResponse.getMessage());
         Assert.assertFalse(actualResponse.isOperationSuccess());
@@ -156,14 +110,12 @@ public class AirportVerifierTest {
      * Test where we do a POST without success because the airport city is null
      */
     @Test
-    public void updateAirportTest_KO_Airport_city_Null() {
+    public void airportTest_KO_Airport_city_Null() {
 
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.POST, new Airport(1231, "International", null), null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertEquals("Invalid city name",actualResponse.getMessage());
         Assert.assertFalse(actualResponse.isOperationSuccess());
@@ -174,14 +126,12 @@ public class AirportVerifierTest {
      * Test where we do a POST without success because the airport id is null
      */
     @Test
-    public void updateAirportTest_KO_Airport_id_Null() {
+    public void airportTest_KO_Airport_id_Null() {
 
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.POST, new Airport(null, "International", "Havana"), null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertEquals("Invalid ID",actualResponse.getMessage());
         Assert.assertFalse(actualResponse.isOperationSuccess());
@@ -197,9 +147,7 @@ public class AirportVerifierTest {
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.DELETE, null, 1));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertNull(actualResponse.getMessage());
         Assert.assertTrue(actualResponse.isOperationSuccess());
@@ -209,14 +157,12 @@ public class AirportVerifierTest {
      * Test where we do a DELETE without success because the queryParam is null
      */
     @Test
-    public void deleteAirportTest_KO_QueryParam_Null() {
+    public void airportTest_KO_QueryParam_Null() {
 
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.DELETE, null, null));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertEquals("Invalid query parameter",actualResponse.getMessage());
         Assert.assertFalse(actualResponse.isOperationSuccess());
@@ -231,9 +177,7 @@ public class AirportVerifierTest {
         airportVerifier = new AirportVerifier();
         airportVerifier.setRequest(new Request<>(RequestType.DELETE, null, 1));
 
-        PowerMock.replayAll();
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
-        PowerMock.verifyAll();
 
         Assert.assertNull(actualResponse.getMessage());
         Assert.assertTrue(actualResponse.isOperationSuccess());
