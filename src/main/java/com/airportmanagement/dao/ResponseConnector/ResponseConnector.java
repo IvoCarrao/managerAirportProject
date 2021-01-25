@@ -1,11 +1,10 @@
-package com.airportmanagement.ProjectUtilities;
-
+package com.airportmanagement.dao;
 
 public class ResponseConnector {
     private boolean success;
     private String error;
 
-    public ResponseConnector(boolean sucess, String error) {
+    protected ResponseConnector(boolean sucess, String error) {
         this.success = sucess;
         this.error = error;
     }

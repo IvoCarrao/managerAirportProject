@@ -1,9 +1,12 @@
 package com.airportmanagement.InputOutput;
 
 import com.airportmanagement.Model.InterfaceModel;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
-
+@Component
 public class Response<T extends InterfaceModel> {
 
    private T requestedObject;

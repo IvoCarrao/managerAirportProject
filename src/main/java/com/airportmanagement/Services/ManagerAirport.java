@@ -5,9 +5,23 @@ import com.airportmanagement.Model.Airport;
 import com.airportmanagement.Model.InterfaceModel;
 import com.airportmanagement.ProjectUtilities.ResponseConnector;
 import com.airportmanagement.ProjectUtilities.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
-public class Manager<T extends InterfaceModel> implements InterfaceManager<T> {
+@Service
+public class ManagerAirport<T extends InterfaceModel> implements InterfaceManagerAirport<T> {
+
+
+    private PersistenceAirportProxy persistenceAirportProxy;
+
+    @Autowired
+    public ManagerAirport(PersistenceAirportProxy persistenceAirportProxy) {
+        this.persistenceAirportProxy = persistenceAirportProxy;
+    }
+
+    public ManagerAirport() {
+    }
 
     /**
      * Method that does a POST by verifying the class of the given object
@@ -21,7 +35,7 @@ public class Manager<T extends InterfaceModel> implements InterfaceManager<T> {
             return PersistenceAirplaneProxy.getInstance().insert((Airplane) model);
         }
         // In this moment in the code if is not a Airplane is an airport
-        return PersistenceAirportProxy.getInstance().insert((Airport) model);
+        return persistenceAirportProxy.insert((Airport) model);
 
     }
 
@@ -31,7 +45,7 @@ public class Manager<T extends InterfaceModel> implements InterfaceManager<T> {
      * @param model generic class that must extend InterfaceModel
      * @return an object ResponseConnector - returns the success or not of the operation and a message
      */
-    public ResponseConnector update(T model){
+    public ResponseConnector update(T model) {
         //Verify which connector should be used
         if (model instanceof Airplane) {
 

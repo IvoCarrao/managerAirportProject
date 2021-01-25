@@ -1,32 +1,38 @@
 package com.airportmanagement.Services;
-/*
-This class:
- - receives one object from the RequestReader.class
- - Makes the validations necessaries
- - Connects with the Manager.class
- */
 
 import com.airportmanagement.InputOutput.Request;
 import com.airportmanagement.InputOutput.RequestType;
 import com.airportmanagement.InputOutput.Response;
-import com.airportmanagement.Model.Airplane;
+import com.airportmanagement.Model.Airport;
 import com.airportmanagement.Model.InterfaceModel;
 import com.airportmanagement.Persistence.ClassesToPersist;
-import com.airportmanagement.Persistence.Manager;
+import com.airportmanagement.Persistence.ManagerAirport;
 import com.airportmanagement.ProjectUtilities.Constants;
 import com.airportmanagement.ProjectUtilities.Pair;
 import com.airportmanagement.ProjectUtilities.ResponseConnector;
 
-import java.time.LocalDate;
 
-public class AirplaneVerifier {
+public class AirportVerifier {
+
+
+    private ManagerAirport manager;
+
+
+    public AirportVerifier(ManagerAirport manager) {
+        this.manager = manager;
+    }
 
     private Request request;
-    private Airplane airplane;
     private RequestType requestType;
+    private Airport airport;
 
+    public AirportVerifier(){}
 
-    public AirplaneVerifier(Request request) {
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
+    public AirportVerifier(Request request) {
         this.request = request;
     }
 
@@ -45,36 +51,29 @@ public class AirplaneVerifier {
 
         requestType = request.getRequestType();
 
-        if (requestType.equals(RequestType.DELETE) || requestType.equals(RequestType.GET))
-        {
-            if(request.getQueryParameterValue() == null)
+        if (requestType.equals(RequestType.DELETE) || requestType.equals(RequestType.GET)) {
+            if (request.getQueryParameterValue() == null)
                 return Constants.INVALID_QUERY_PARAMETER;
             return Constants.VALID_REQUEST;
         }
 
-        if(request.getRequestBody() == null)
+        if (request.getRequestBody() == null)
             return Constants.REQUEST_EMPTY_ERROR;
 
-        airplane = (Airplane) request.getRequestBody();
+        airport = (Airport) request.getRequestBody();
 
-        if (airplane.getYearMade() == null || airplane.getYearMade() < 1900 || airplane.getYearMade() > LocalDate.now().getYear())
-            return Constants.YEAR_INVALID_ERROR;
+        if (airport.getName() == null)
+            return Constants.INVALID_AIRPORT_NAME;
 
-        if (airplane.getBrand() == null)
-            return Constants.BRAND_INVALID_ERROR;
+        if (airport.getCity() == null)
+            return Constants.INVALID_CITY_NAME;
 
-        if (airplane.getId() == null || airplane.getId() < 0)
+        if (airport.getId() == null || airport.getId() < 0)
             return Constants.INVALID_ID_ERROR;
 
         return Constants.VALID_REQUEST;
     }
 
-    /**
-     * Verifies the request in therms of validity. If is valid call the Manager.class to interact with the persistence
-     * If not valid responds with
-     *
-     * @return error message
-     */
     public Response verifier() {
 
         //Verifies if the request is valid
@@ -104,27 +103,15 @@ public class AirplaneVerifier {
 
     }
 
-    private Response getPersistenceConnection() {
-        Manager<InterfaceModel> manager = new Manager<>();
-        Pair<ResponseConnector, InterfaceModel> responseConnector = manager.findById(ClassesToPersist.AIRPLANE, request.getQueryParameterValue());
-        // We construct the response with a message and a boolean to indicate the success or not of the operation and the message and the requested object
-        Response response = new Response();
-        response.setMessage(responseConnector.getFirst().getError());
-        response.setOperationSuccess(responseConnector.getFirst().isSuccess());
-        response.setRequestedObject(responseConnector.getSecond());
-        return response;
-    }
-
     /**
-     * Calls the persistence manager to make a DELETE
+     * Calls the persistence manager to make a POST
      *
      * @return Response to send
      */
-    private Response deletePersistenceConnection() {
-        Manager<InterfaceModel> manager = new Manager<>();
-        ResponseConnector responseConnector = manager.deleteById(ClassesToPersist.AIRPLANE, request.getQueryParameterValue());
+    private Response postPersistenceConnection() {
+        ResponseConnector responseConnector = manager.insert(airport);
         // We construct the response with a message and a boolean to indicate the success or not of the operation and the message
-        // We do not add one object to the response because is a DELETE
+        // We do not add one object to the response because is a PUT
         Response response = new Response();
         response.setMessage(responseConnector.getError());
         response.setOperationSuccess(responseConnector.isSuccess());
@@ -137,8 +124,7 @@ public class AirplaneVerifier {
      * @return Response to send
      */
     private Response putPersistenceConnection() {
-        Manager<InterfaceModel> manager = new Manager<>();
-        ResponseConnector responseConnector = manager.update(airplane);
+        ResponseConnector responseConnector = manager.update(airport);
         // We construct the response with a message and a boolean to indicate the success or not of the operation and the message
         // We do not add one object to the response because is a POST
         Response response = new Response();
@@ -148,20 +134,27 @@ public class AirplaneVerifier {
     }
 
     /**
-     * Calls the persistence manager to make a POST
+     * Calls the persistence manager to make a DELETE
      *
      * @return Response to send
      */
-    private Response postPersistenceConnection() {
-        Manager<InterfaceModel> manager = new Manager<>();
-        ResponseConnector responseConnector = manager.insert(airplane);
+    private Response deletePersistenceConnection() {
+        ResponseConnector responseConnector = manager.deleteById(ClassesToPersist.AIRPORT, request.getQueryParameterValue());
         // We construct the response with a message and a boolean to indicate the success or not of the operation and the message
-        // We do not add one object to the response because is a PUT
+        // We do not add one object to the response because is a DELETE
         Response response = new Response();
         response.setMessage(responseConnector.getError());
         response.setOperationSuccess(responseConnector.isSuccess());
         return response;
     }
 
-
+    private Response getPersistenceConnection() {
+        Pair<ResponseConnector, InterfaceModel> responseConnector = manager.findById(ClassesToPersist.AIRPORT, request.getQueryParameterValue());
+        // We construct the response with a message and a boolean to indicate the success or not of the operation and the message and the requested object
+        Response response = new Response();
+        response.setMessage(responseConnector.getFirst().getError());
+        response.setOperationSuccess(responseConnector.getFirst().isSuccess());
+        response.setRequestedObject(responseConnector.getSecond());
+        return response;
+    }
 }
