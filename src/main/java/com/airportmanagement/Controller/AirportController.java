@@ -2,9 +2,10 @@ package com.airportmanagement.Controller;
 
 import com.airportmanagement.InputOutput.Request;
 import com.airportmanagement.InputOutput.RequestType;
-import com.airportmanagement.InputOutput.Response;
+import com.airportmanagement.InputOutput.ResponseService;
 import com.airportmanagement.Model.Airport;
-import com.airportmanagement.Services.AirportVerifier;
+import com.airportmanagement.Services.InterfaceManagerAirport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,31 +15,41 @@ import javax.validation.Valid;
 @RestController
 public class AirportController {
 
-    @PostMapping
-    public Response addAirport(@Valid @NonNull @RequestBody Airport airport) {
+    private final InterfaceManagerAirport managerAirport;
 
-        Request request = new Request(RequestType.POST, airport, null);
-        return new AirportVerifier(request).verifier();
+    @Autowired
+    public AirportController(InterfaceManagerAirport managerAirport) {
+        this.managerAirport = managerAirport;
+    }
+
+    @PostMapping
+    public ResponseService<Airport> addAirport(@Valid @NonNull @RequestBody Airport airport) {
+        Request<Airport> request = new Request<>(RequestType.POST, airport, null);
+        managerAirport.setRequest(request);
+        return managerAirport.start();
     }
 
     @PutMapping
-    public Response updateAirport(@Valid @NonNull @RequestBody Airport airport) {
+    public ResponseService<Airport> updateAirport(@Valid @NonNull @RequestBody Airport airport) {
 
-        Request request = new Request(RequestType.PUT, airport, null);
-        return new AirportVerifier(request).verifier();
+        Request<Airport> request = new Request<>(RequestType.PUT, airport, null);
+        managerAirport.setRequest(request);
+        return managerAirport.start();
     }
 
     @DeleteMapping(path = "/{id}")
-    public Response deleteAirport(@PathVariable("id") Integer id) {
+    public ResponseService<Airport> deleteAirport(@PathVariable("id") Integer id) {
 
-        Request request = new Request(RequestType.DELETE, null, id);
-        return new AirportVerifier(request).verifier();
+        Request<Airport> request = new Request<>(RequestType.DELETE, null, id);
+        managerAirport.setRequest(request);
+        return managerAirport.start();
     }
 
     @GetMapping(path = "/{id}")
-    public Response getAirport(@PathVariable("id") Integer id) {
+    public ResponseService<Airport> getAirport(@PathVariable("id") Integer id) {
 
-        Request request = new Request(RequestType.GET, null, id);
-        return new AirportVerifier(request).verifier();
+        Request<Airport> request = new Request<>(RequestType.GET, null, id);
+        managerAirport.setRequest(request);
+        return managerAirport.start();
     }
 }

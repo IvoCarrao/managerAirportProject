@@ -2,41 +2,45 @@ package com.airportmanagement.Persistence;
 
 import com.airportmanagement.Model.Airport;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
-import com.airportmanagement.dao.AirportPersistenceConnector;
-import com.airportmanagement.dao.InterfacePersistenceAriportConnector;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.dao.InterfacePersistenceAirportConnector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
-public class PersistenceAirportProxy implements InterfacePersistenceAriportConnector {
+@Service
+@Scope("singleton")
+public class
+
+PersistenceAirportProxy implements InterfacePersistenceAirportConnector {
 
     private static PersistenceAirportProxy persistenceManager = null;
 
-    AirportPersistenceConnector airplanePersistenceConnector = new AirportPersistenceConnector();
+    private final InterfacePersistenceAirportConnector airportPersistenceConnector;
 
-    public static PersistenceAirportProxy getInstance() {
-
-        if (persistenceManager == null) {
-            persistenceManager = new PersistenceAirportProxy();
-        }
-
-        return persistenceManager;
+    @Autowired
+    public PersistenceAirportProxy(@Qualifier("postgresAirport")InterfacePersistenceAirportConnector airportPersistenceConnector) {
+        this.airportPersistenceConnector = airportPersistenceConnector;
     }
+
     @Override
     public ResponseConnector insert(Airport airport) {
-        return airplanePersistenceConnector.insert(airport);
+        return airportPersistenceConnector.insert(airport);
     }
 
     @Override
     public ResponseConnector update(Airport airport) {
-        return airplanePersistenceConnector.update(airport);
+        return airportPersistenceConnector.update(airport);
     }
 
     @Override
     public ResponseConnector deleteById(Integer id) {
-        return airplanePersistenceConnector.deleteById(id);
+        return airportPersistenceConnector.deleteById(id);
     }
 
     @Override
     public Pair<ResponseConnector, Airport> findById(Integer id) {
-        return airplanePersistenceConnector.findById(id);
+        return airportPersistenceConnector.findById(id);
     }
 }

@@ -1,4 +1,4 @@
-package com.airportmanagement.dao;
+package com.airportmanagement.dao.ResponseConnector;
 
 public class ResponseConnector {
     private boolean success;

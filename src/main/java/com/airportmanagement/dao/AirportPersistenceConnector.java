@@ -1,14 +1,16 @@
 package com.airportmanagement.dao;
 
 import com.airportmanagement.Model.Airport;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
-import com.airportmanagement.ProjectUtilities.ResponseConnectorFactory;
 import com.airportmanagement.ProjectUtilities.Pair;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnectorFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AirportPersistenceConnector implements InterfacePersistenceAriportConnector {
+@Repository("arrayListAirport")
+public class AirportPersistenceConnector implements InterfacePersistenceAirportConnector {
 
     //logic of this persistence - if id doesn't exist in the listOfNames, means that this airplane doesn't exist in the persistence device.
     //insert and update are two different operations, the client choose between insert a new airport or update one that exists
@@ -49,7 +51,7 @@ public class AirportPersistenceConnector implements InterfacePersistenceAriportC
                     airportList.add(airport);
                     airportList.remove(port);
 
-                    return ResponseConnectorFactory.createResponseConnector(true, "airplane updated, operation successfully");
+                    return ResponseConnectorFactory.createResponseConnector(true, "airplane updated successfully");
                 }
             }
         }
@@ -69,7 +71,7 @@ public class AirportPersistenceConnector implements InterfacePersistenceAriportC
                     airportList.remove(airport);
                     listOfIds.remove(id);
 
-                    return ResponseConnectorFactory.createResponseConnector(true, "airport deleted, operation successfully");
+                    return ResponseConnectorFactory.createResponseConnector(true, "airport deleted successfully");
                 }
             }
         }
@@ -87,7 +89,7 @@ public class AirportPersistenceConnector implements InterfacePersistenceAriportC
             for (Airport port : airportList) {
                 if (port.getId().equals(id)) {
 
-                    return new Pair<ResponseConnector, Airport>(ResponseConnectorFactory.createResponseConnector(true, "find airport, operation successfully"), port);
+                    return new Pair<ResponseConnector, Airport>(ResponseConnectorFactory.createResponseConnector(true, "found airport successfully"), port);
                 }
             }
         }

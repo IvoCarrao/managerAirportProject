@@ -2,7 +2,7 @@ package com.airportmanagement.dao;
 
 import com.airportmanagement.Model.Airplane;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
 
 
 public interface InterfacePersistenceAirplaneConnector {

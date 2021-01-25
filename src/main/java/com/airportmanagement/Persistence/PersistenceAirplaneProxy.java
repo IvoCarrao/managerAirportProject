@@ -2,23 +2,24 @@ package com.airportmanagement.Persistence;
 
 import com.airportmanagement.Model.Airplane;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
-import com.airportmanagement.dao.AirplanePersistenceConnector;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
 import com.airportmanagement.dao.InterfacePersistenceAirplaneConnector;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
+@Service
+@Scope("singleton")
 public class PersistenceAirplaneProxy implements InterfacePersistenceAirplaneConnector {
 
     private static PersistenceAirplaneProxy persistenceManager = null;
 
-    AirplanePersistenceConnector airplanePersistenceConnector = new AirplanePersistenceConnector();
+    private final InterfacePersistenceAirplaneConnector airplanePersistenceConnector;
 
-    public static PersistenceAirplaneProxy getInstance() {
-
-        if (persistenceManager == null) {
-            persistenceManager = new PersistenceAirplaneProxy();
-        }
-
-        return persistenceManager;
+    @Autowired
+    public PersistenceAirplaneProxy(@Qualifier("postgresAirplane")InterfacePersistenceAirplaneConnector airplanePersistenceConnector) {
+        this.airplanePersistenceConnector = airplanePersistenceConnector;
     }
     /**
      * Calls the connector - method POST

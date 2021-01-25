@@ -2,7 +2,7 @@ package AirplaneTesting;
 
 import com.airportmanagement.Model.Airplane;
 import com.airportmanagement.dao.AirplanePersistenceConnector;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
 import de.scravy.pair.Pair;
 import org.junit.Assert;
 import org.junit.After;
@@ -65,7 +65,7 @@ public class AirplanePersistenceConnectorTest {
         ResponseConnector expectedResponseConnector = airPlanePersistenceConnector.insert(airplaneBombardie);
 
         //assert the expected response
-        Assert.assertEquals("airplane added, operation successful", expectedResponseConnector.getError());
+        Assert.assertEquals("airplane added successfully", expectedResponseConnector.getError());
         Assert.assertTrue(expectedResponseConnector.isSuccess());
         Assert.assertEquals(4, airPlanePersistenceConnector.getSize());
     }
@@ -90,7 +90,7 @@ public class AirplanePersistenceConnectorTest {
         ResponseConnector expectedResponseConnector = airPlanePersistenceConnector.update(airplaneBombardie);
 
         //assert the expected response
-        Assert.assertEquals("airplane updated, operation successfully", expectedResponseConnector.getError());
+        Assert.assertEquals("airplane updated successfully", expectedResponseConnector.getError());
         Assert.assertTrue(expectedResponseConnector.isSuccess());
         Assert.assertEquals(3, airPlanePersistenceConnector.getSize());
     }
@@ -137,7 +137,7 @@ public class AirplanePersistenceConnectorTest {
         ResponseConnector expectedResponseConnector = airPlanePersistenceConnector.deleteById(3);
 
         //assert the expected response
-        Assert.assertEquals("airplane deleted, operation successfully", expectedResponseConnector.getError());
+        Assert.assertEquals("airplane deleted successfully", expectedResponseConnector.getError());
         Assert.assertTrue(expectedResponseConnector.isSuccess());
         Assert.assertEquals(2, airPlanePersistenceConnector.getSize());
     }
@@ -211,7 +211,7 @@ public class AirplanePersistenceConnectorTest {
         //Expected airplane
         Airplane expectedAirplane = new Airplane(3, "AirBus", 2008, false);
         //assert the expected response
-        Assert.assertEquals("find airplane, operation successfully", responseConnector.getFirst().getError());
+        Assert.assertEquals("found airplane successfully", responseConnector.getFirst().getError());
         Assert.assertTrue(responseConnector.getFirst().isSuccess());
         Assert.assertEquals(3, airPlanePersistenceConnector.getSize());
         Assert.assertEquals(expectedAirplane, responseConnector.getSecond());

@@ -1,93 +1,91 @@
-package com.airportmanagement.Persistence;
+package com.airportmanagement.Services;
 
-import com.airportmanagement.Model.Airplane;
+import com.airportmanagement.InputOutput.Request;
+import com.airportmanagement.InputOutput.RequestType;
+import com.airportmanagement.InputOutput.ResponseService;
 import com.airportmanagement.Model.Airport;
 import com.airportmanagement.Model.InterfaceModel;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
+import com.airportmanagement.Persistence.PersistenceAirportProxy;
 import com.airportmanagement.ProjectUtilities.Pair;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.core.AirportVerifier;
+import com.airportmanagement.core.CoreResponse.CoreResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 @Service
-public class ManagerAirport<T extends InterfaceModel> implements InterfaceManagerAirport<T> {
+public class ManagerAirport implements InterfaceManagerAirport {
 
-
-    private PersistenceAirportProxy persistenceAirportProxy;
+    private Request<Airport> request;
+    private Airport airport;
+    private RequestType requestType;
+    private final PersistenceAirportProxy persistenceAirportProxy;
+    private final ResponseService<Airport> serviceResponseService;
 
     @Autowired
-    public ManagerAirport(PersistenceAirportProxy persistenceAirportProxy) {
+    public ManagerAirport(PersistenceAirportProxy persistenceAirportProxy, ResponseService<Airport> serviceResponseService) {
         this.persistenceAirportProxy = persistenceAirportProxy;
+        this.serviceResponseService = serviceResponseService;
     }
 
-    public ManagerAirport() {
+    @Override
+    public void setRequest(Request<Airport> request) {
+        this.request = request;
     }
 
-    /**
-     * Method that does a POST by verifying the class of the given object
-     *
-     * @param model generic class that must extend InterfaceModel
-     * @return an object ResponseConnector - returns the success or not of the operation and a message
-     */
-    public ResponseConnector insert(T model) {
-        //Verify which connector should be used
-        if (model instanceof Airplane) {
-            return PersistenceAirplaneProxy.getInstance().insert((Airplane) model);
+    @Override
+    public ResponseService<Airport> start() {
+
+        ResponseService<Airport> responseService = verifyAirport();
+
+        if (!responseService.isOperationSuccess())
+            return serviceResponseService;
+
+        if (RequestType.POST.equals(requestType)) {
+            ResponseConnector responseConnector = persistenceAirportProxy.insert(airport);
+            serviceResponseService.setRequestedObject(null);
+            serviceResponseService.setMessage(responseConnector.getError());
+            serviceResponseService.setOperationSuccess(responseConnector.isSuccess());
+            return serviceResponseService;
         }
-        // In this moment in the code if is not a Airplane is an airport
-        return persistenceAirportProxy.insert((Airport) model);
 
-    }
-
-    /**
-     * Method that does a PUT by verifying the class of the given object
-     *
-     * @param model generic class that must extend InterfaceModel
-     * @return an object ResponseConnector - returns the success or not of the operation and a message
-     */
-    public ResponseConnector update(T model) {
-        //Verify which connector should be used
-        if (model instanceof Airplane) {
-
-            return PersistenceAirplaneProxy.getInstance().update((Airplane) model);
+        if (RequestType.GET.equals(requestType)) {
+            Pair<ResponseConnector, Airport> responseConnector = persistenceAirportProxy.findById(request.getQueryParameterValue());
+            serviceResponseService.setRequestedObject(responseConnector.getSecond());
+            serviceResponseService.setMessage(responseConnector.getFirst().getError());
+            serviceResponseService.setOperationSuccess(responseConnector.getFirst().isSuccess());
+            return serviceResponseService;
         }
-        // In this moment in the code if is not a Airplane is an airport
-        return PersistenceAirportProxy.getInstance().update((Airport) model);
-    }
 
-    /**
-     * Method that does a DELETE by verifying the class of the given object
-     *
-     * @param model generic that must extend InterfaceModel
-     * @param id    identification of the object to delete
-     * @return an object ResponseConnector - returns the success or not of the operation and a message
-     */
-    public ResponseConnector deleteById(ClassesToPersist model, Integer id) {
-        //Verify which connector should be used
-        if (model.equals(ClassesToPersist.AIRPLANE)) {
-            return PersistenceAirplaneProxy.getInstance().deleteById(id);
+        if (RequestType.DELETE.equals(requestType)) {
+            ResponseConnector responseConnector = persistenceAirportProxy.deleteById(request.getQueryParameterValue());
+            serviceResponseService.setRequestedObject(null);
+            serviceResponseService.setMessage(responseConnector.getError());
+            serviceResponseService.setOperationSuccess(responseConnector.isSuccess());
+            return serviceResponseService;
         }
-        // In this moment in the code if is not a Airplane is an airport
-        return PersistenceAirportProxy.getInstance().deleteById(id);
+
+        ResponseConnector responseConnector = persistenceAirportProxy.update(airport);
+        serviceResponseService.setRequestedObject(null);
+        serviceResponseService.setMessage(responseConnector.getError());
+        serviceResponseService.setOperationSuccess(responseConnector.isSuccess());
+        return serviceResponseService;
     }
 
-    /**
-     * Method that does a GET by verifying the class of the given object
-     *
-     * @param model generic that must extend InterfaceModel. It can't be null
-     * @param id    identification of the object to delete
-     * @return an object Pair - returns the success or not of the operation with a message and the object or null if operation is unsuccessful
-     */
-    //I am not using generic T here and instead I am using the InterfaceModel to avoid the "unchecked" warning and be type safe
-    public Pair<ResponseConnector, InterfaceModel> findById(ClassesToPersist model, Integer id) {
-        //Verify which connector should be used
-        if (model.equals(ClassesToPersist.AIRPLANE)) {
-            Pair<ResponseConnector, Airplane> response = PersistenceAirplaneProxy.getInstance().findById(id);
-            return new Pair<>(response.getFirst(), response.getSecond());
+    private ResponseService<Airport> verifyAirport() {
+        AirportVerifier airportVerifier = new AirportVerifier();
+        airportVerifier.setRequest(request);
+        CoreResponse<InterfaceModel> verifierResponse = airportVerifier.verifier();
+
+        if (!verifierResponse.isOperationSuccess()) {
+            serviceResponseService.setMessage(verifierResponse.getMessage());
+            serviceResponseService.setOperationSuccess(false);
+            return serviceResponseService;
         }
-        // In this moment in the code if is not a Airplane is an airport
-        Pair<ResponseConnector, Airport> response = PersistenceAirportProxy.getInstance().findById(id);
-        return new Pair<>(response.getFirst(), response.getSecond());
-    }
 
+        requestType = verifierResponse.getRequestType();
+        airport = (Airport) verifierResponse.getRequestedObject();
+        serviceResponseService.setOperationSuccess(true);
+        return serviceResponseService;
+    }
 }

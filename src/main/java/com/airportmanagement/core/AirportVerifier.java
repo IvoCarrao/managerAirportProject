@@ -1,38 +1,21 @@
-package com.airportmanagement.Services;
+package com.airportmanagement.core;
 
 import com.airportmanagement.InputOutput.Request;
 import com.airportmanagement.InputOutput.RequestType;
-import com.airportmanagement.InputOutput.Response;
 import com.airportmanagement.Model.Airport;
 import com.airportmanagement.Model.InterfaceModel;
-import com.airportmanagement.Persistence.ClassesToPersist;
-import com.airportmanagement.Persistence.ManagerAirport;
 import com.airportmanagement.ProjectUtilities.Constants;
-import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
+import com.airportmanagement.core.CoreResponse.CoreResponse;
+import com.airportmanagement.core.CoreResponse.CoreResponseFactory;
 
 
 public class AirportVerifier {
 
 
-    private ManagerAirport manager;
-
-
-    public AirportVerifier(ManagerAirport manager) {
-        this.manager = manager;
-    }
-
-    private Request request;
-    private RequestType requestType;
+    private Request<Airport> request;
     private Airport airport;
 
-    public AirportVerifier(){}
-
-    public void setRequest(Request request) {
-        this.request = request;
-    }
-
-    public AirportVerifier(Request request) {
+    public void setRequest(Request<Airport> request) {
         this.request = request;
     }
 
@@ -42,6 +25,7 @@ public class AirportVerifier {
      * @return error message
      */
     private String requestVerifier() {
+        RequestType requestType;
 
         if (request == null)
             return Constants.REQUEST_IS_NULL_ERROR;
@@ -60,7 +44,7 @@ public class AirportVerifier {
         if (request.getRequestBody() == null)
             return Constants.REQUEST_EMPTY_ERROR;
 
-        airport = (Airport) request.getRequestBody();
+        airport = request.getRequestBody();
 
         if (airport.getName() == null)
             return Constants.INVALID_AIRPORT_NAME;
@@ -74,87 +58,29 @@ public class AirportVerifier {
         return Constants.VALID_REQUEST;
     }
 
-    public Response verifier() {
+    public CoreResponse<InterfaceModel> verifier() {
 
         //Verifies if the request is valid
         String requestVerifierMessage = requestVerifier();
         if (!requestVerifierMessage.equals(Constants.VALID_REQUEST)) {
-            Response response = new Response();
-            response.setOperationSuccess(false);
-            response.setMessage(requestVerifierMessage);
-            return response;
+            return CoreResponseFactory.createResponseConnector(airport, false, requestVerifierMessage, null);
         }
 
         //Call Manager to do one POST
-        if (request.getRequestType().equals(RequestType.POST))
-            return postPersistenceConnection();
-
+        if (request.getRequestType().equals(RequestType.POST)) {
+            return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.POST);
+        }
         //Call Manager to do one DELETE
-        if (request.getRequestType().equals(RequestType.DELETE))
-            return deletePersistenceConnection();
+        if (request.getRequestType().equals(RequestType.DELETE)) {
+            return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.DELETE);
+        }
 
         //Call Manager to do one GET
-        if (request != null && request.getRequestType().equals(RequestType.GET))
-            return getPersistenceConnection();
+        if (request != null && request.getRequestType().equals(RequestType.GET)) {
+            return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.GET);
+        }
 
         //Call Manager to do one PUT
-        return putPersistenceConnection();
-
-
-    }
-
-    /**
-     * Calls the persistence manager to make a POST
-     *
-     * @return Response to send
-     */
-    private Response postPersistenceConnection() {
-        ResponseConnector responseConnector = manager.insert(airport);
-        // We construct the response with a message and a boolean to indicate the success or not of the operation and the message
-        // We do not add one object to the response because is a PUT
-        Response response = new Response();
-        response.setMessage(responseConnector.getError());
-        response.setOperationSuccess(responseConnector.isSuccess());
-        return response;
-    }
-
-    /**
-     * Calls the persistence manager to make a PUT
-     *
-     * @return Response to send
-     */
-    private Response putPersistenceConnection() {
-        ResponseConnector responseConnector = manager.update(airport);
-        // We construct the response with a message and a boolean to indicate the success or not of the operation and the message
-        // We do not add one object to the response because is a POST
-        Response response = new Response();
-        response.setMessage(responseConnector.getError());
-        response.setOperationSuccess(responseConnector.isSuccess());
-        return response;
-    }
-
-    /**
-     * Calls the persistence manager to make a DELETE
-     *
-     * @return Response to send
-     */
-    private Response deletePersistenceConnection() {
-        ResponseConnector responseConnector = manager.deleteById(ClassesToPersist.AIRPORT, request.getQueryParameterValue());
-        // We construct the response with a message and a boolean to indicate the success or not of the operation and the message
-        // We do not add one object to the response because is a DELETE
-        Response response = new Response();
-        response.setMessage(responseConnector.getError());
-        response.setOperationSuccess(responseConnector.isSuccess());
-        return response;
-    }
-
-    private Response getPersistenceConnection() {
-        Pair<ResponseConnector, InterfaceModel> responseConnector = manager.findById(ClassesToPersist.AIRPORT, request.getQueryParameterValue());
-        // We construct the response with a message and a boolean to indicate the success or not of the operation and the message and the requested object
-        Response response = new Response();
-        response.setMessage(responseConnector.getFirst().getError());
-        response.setOperationSuccess(responseConnector.getFirst().isSuccess());
-        response.setRequestedObject(responseConnector.getSecond());
-        return response;
+        return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.PUT);
     }
 }

@@ -3,7 +3,7 @@ package AirportTesting;
 import com.airportmanagement.Model.Airport;
 import com.airportmanagement.dao.AirportPersistenceConnector;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
+import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -88,7 +88,7 @@ public class AirportPersistenceConnectorTest {
         ResponseConnector expectedResponseConnector = airportPersistenceConnector.update(airportToUpdate);
 
         //assert the expected response
-        Assert.assertEquals("airplane updated, operation successfully", expectedResponseConnector.getError());
+        Assert.assertEquals("airplane updated successfully", expectedResponseConnector.getError());
         Assert.assertTrue(expectedResponseConnector.isSuccess());
         Assert.assertEquals(3, airportPersistenceConnector.getSize());
     }
@@ -160,7 +160,7 @@ public class AirportPersistenceConnectorTest {
         ResponseConnector expectedResponseConnector = airportPersistenceConnector.deleteById(3);
 
         //assert the expected response
-        Assert.assertEquals("airport deleted, operation successfully", expectedResponseConnector.getError());
+        Assert.assertEquals("airport deleted successfully", expectedResponseConnector.getError());
         Assert.assertTrue(expectedResponseConnector.isSuccess());
         Assert.assertEquals(2, airportPersistenceConnector.getSize());
     }
@@ -209,7 +209,7 @@ public class AirportPersistenceConnectorTest {
         //Expected airplane
         Airport airportToFind =  new Airport(3,"AirportParis","Paris");
         //assert the expected response
-        Assert.assertEquals("find airport, operation successfully", responseConnector.getFirst().getError());
+        Assert.assertEquals("found airport successfully", responseConnector.getFirst().getError());
         Assert.assertTrue(responseConnector.getFirst().isSuccess());
         Assert.assertEquals(3, airportPersistenceConnector.getSize());
         Assert.assertEquals(airportToFind, responseConnector.getSecond());

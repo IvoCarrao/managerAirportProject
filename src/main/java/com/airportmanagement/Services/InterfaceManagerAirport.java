@@ -1,21 +1,12 @@
-package com.airportmanagement.Persistence;
+package com.airportmanagement.Services;
 
 import com.airportmanagement.InputOutput.Request;
-import com.airportmanagement.InputOutput.Response;
-import com.airportmanagement.Model.InterfaceModel;
-import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.ProjectUtilities.ResponseConnector;
+import com.airportmanagement.InputOutput.ResponseService;
+import com.airportmanagement.Model.Airport;
 
 
-public interface InterfaceManagerAirport<T extends InterfaceModel> {
+public interface InterfaceManagerAirport {
+    void setRequest(Request<Airport> request);
 
-    ResponseConnector insert(T model);
-    ResponseConnector update(T model);
-    ResponseConnector deleteById(ClassesToPersist model, Integer id);
-    Pair<ResponseConnector, InterfaceModel> findById(ClassesToPersist model, Integer id);
-
-    void setRequest(Request request);
-    Response 
-
-
+    ResponseService<Airport> start();
 }

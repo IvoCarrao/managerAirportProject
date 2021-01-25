@@ -64,7 +64,7 @@ public class Airplane extends Model {
         return isInTheAir;
     }
 
-    public void setInTheAir(boolean inTheAir) {
-        isInTheAir = inTheAir;
+    public void setInTheAir(boolean isInTheAir) {
+        isInTheAir = isInTheAir;
     }
 }

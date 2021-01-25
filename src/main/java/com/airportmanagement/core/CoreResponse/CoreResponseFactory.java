@@ -1,7 +1,8 @@
-package com.airportmanagement.core;
+package com.airportmanagement.core.CoreResponse;
 
 import com.airportmanagement.InputOutput.RequestType;
 import com.airportmanagement.Model.InterfaceModel;
+import com.airportmanagement.core.CoreResponse.CoreResponse;
 
 public final class CoreResponseFactory {
 

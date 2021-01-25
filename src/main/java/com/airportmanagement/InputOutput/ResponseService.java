@@ -1,13 +1,11 @@
 package com.airportmanagement.InputOutput;
 
 import com.airportmanagement.Model.InterfaceModel;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 @Component
-public class Response<T extends InterfaceModel> {
+public class ResponseService<T extends InterfaceModel> {
 
    private T requestedObject;
    private boolean operationSuccess;
@@ -41,13 +39,14 @@ public class Response<T extends InterfaceModel> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Response<?> response = (Response<?>) o;
-        return operationSuccess == response.operationSuccess &&
-                Objects.equals(requestedObject, response.requestedObject);
+        ResponseService<?> responseService = (ResponseService<?>) o;
+        return operationSuccess == responseService.operationSuccess &&
+                Objects.equals(requestedObject, responseService.requestedObject);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(requestedObject, operationSuccess);
     }
+
 }
