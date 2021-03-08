@@ -63,24 +63,24 @@ public class AirportVerifier {
         //Verifies if the request is valid
         String requestVerifierMessage = requestVerifier();
         if (!requestVerifierMessage.equals(Constants.VALID_REQUEST)) {
-            return CoreResponseFactory.createResponseConnector(airport, false, requestVerifierMessage, null);
+            return CoreResponseFactory.createCoreResponse(airport, false, requestVerifierMessage, null);
         }
 
         //Call Manager to do one POST
         if (request.getRequestType().equals(RequestType.POST)) {
-            return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.POST);
+            return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.POST);
         }
         //Call Manager to do one DELETE
         if (request.getRequestType().equals(RequestType.DELETE)) {
-            return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.DELETE);
+            return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.DELETE);
         }
 
         //Call Manager to do one GET
         if (request != null && request.getRequestType().equals(RequestType.GET)) {
-            return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.GET);
+            return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.GET);
         }
 
         //Call Manager to do one PUT
-        return CoreResponseFactory.createResponseConnector(airport, true, null, RequestType.PUT);
+        return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.PUT);
     }
 }

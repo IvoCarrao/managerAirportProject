@@ -71,26 +71,26 @@ public class AirplaneVerifier {
         //Verifies if the request is valid
         String requestVerifierMessage = requestVerifier();
         if (!requestVerifierMessage.equals(Constants.VALID_REQUEST)) {
-            return CoreResponseFactory.createResponseConnector(null, false, requestVerifierMessage, null);
+            return CoreResponseFactory.createCoreResponse(null, false, requestVerifierMessage, null);
         }
 
         //Call Manager to do one POST
         if (request.getRequestType().equals(RequestType.POST)) {
-            return CoreResponseFactory.createResponseConnector(airplane, true, null, RequestType.POST);
+            return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.POST);
         }
 
         //Call Manager to do one DELETE
         if (request.getRequestType().equals(RequestType.DELETE)) {
-            return CoreResponseFactory.createResponseConnector(airplane, true, null, RequestType.DELETE);
+            return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.DELETE);
         }
 
         //Call Manager to do one GET
         if (request != null && request.getRequestType().equals(RequestType.GET)) {
-            return CoreResponseFactory.createResponseConnector(airplane, true, null, RequestType.GET);
+            return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.GET);
         }
 
         //Call Manager to do one PUT
-        return CoreResponseFactory.createResponseConnector(airplane, true, null, RequestType.PUT);
+        return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.PUT);
     }
 
 }

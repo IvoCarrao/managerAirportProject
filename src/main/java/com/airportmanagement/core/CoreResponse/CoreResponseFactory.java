@@ -6,7 +6,7 @@ import com.airportmanagement.core.CoreResponse.CoreResponse;
 
 public final class CoreResponseFactory {
 
-    public static CoreResponse<InterfaceModel> createResponseConnector(InterfaceModel requestedObject, boolean operationSuccess, String message, RequestType requestType){
+    public static CoreResponse<InterfaceModel> createCoreResponse(InterfaceModel requestedObject, boolean operationSuccess, String message, RequestType requestType){
         return new CoreResponse<>(requestedObject, operationSuccess, message, requestType);
     }
 }
