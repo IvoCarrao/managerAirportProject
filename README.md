@@ -1,1 +1,1 @@
-Small backend that for now only does the CRUD operation
+Small backend that for now only does the CRUD operations
