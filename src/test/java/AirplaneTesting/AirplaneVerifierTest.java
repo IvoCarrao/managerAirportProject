@@ -109,18 +109,34 @@ public class AirplaneVerifierTest {
     }
 
     /**
+     * Test where query parameter is null
+     */
+    @Test
+    public void queryParam_IsNullTest_KO() {
+
+        airplaneVerifier = new AirplaneVerifier();
+        airplaneVerifier.setRequest(new Request<>(RequestType.GET,null, null));
+
+        CoreResponse<InterfaceModel> actualResponse = airplaneVerifier.verifier();
+
+        Assert.assertFalse(actualResponse.isOperationSuccess());
+        Assert.assertEquals("Invalid query parameter", actualResponse.getMessage());
+        Assert.assertNull(actualResponse.getRequestedObject());
+    }
+
+    /**
      * Test where request body is null
      */
     @Test
     public void requestBody_IsNullTest_KO() {
 
         airplaneVerifier = new AirplaneVerifier();
-        airplaneVerifier.setRequest(new Request<>(RequestType.POST, new Airplane(3, null, 2000, false), null));
+        airplaneVerifier.setRequest(new Request<>(RequestType.POST, null, null));
 
         CoreResponse<InterfaceModel> actualResponse = airplaneVerifier.verifier();
 
         Assert.assertFalse(actualResponse.isOperationSuccess());
-        Assert.assertEquals("Brand has to exist", actualResponse.getMessage());
+        Assert.assertEquals("Request without a request type or a body", actualResponse.getMessage());
         Assert.assertNull(actualResponse.getRequestedObject());
     }
 
