@@ -75,6 +75,22 @@ public class AirportVerifierTest {
     }
 
     /**
+     * Test where we do a POST without success because the request is null
+     */
+    @Test
+    public void airportTest_KO_Request_Null() {
+
+        airportVerifier = new AirportVerifier();
+        airportVerifier.setRequest(null);
+
+        CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
+
+        Assert.assertEquals("Request is null",actualResponse.getMessage());
+        Assert.assertFalse(actualResponse.isOperationSuccess());
+        Assert.assertNull(actualResponse.getRequestedObject());
+    }
+
+    /**
      * Test where we do a PUT with success
      */
     @Test
@@ -175,7 +191,7 @@ public class AirportVerifierTest {
     public void getAirportTest_OK() {
 
         airportVerifier = new AirportVerifier();
-        airportVerifier.setRequest(new Request<>(RequestType.DELETE, null, 1));
+        airportVerifier.setRequest(new Request<>(RequestType.GET, null, 1));
 
         CoreResponse<InterfaceModel> actualResponse = airportVerifier.verifier();
 
