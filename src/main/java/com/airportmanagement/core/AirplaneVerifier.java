@@ -68,29 +68,28 @@ public class AirplaneVerifier {
 
     public CoreResponse<InterfaceModel> verifier() {
 
+
         //Verifies if the request is valid
         String requestVerifierMessage = requestVerifier();
         if (!requestVerifierMessage.equals(Constants.VALID_REQUEST)) {
             return CoreResponseFactory.createCoreResponse(null, false, requestVerifierMessage, null);
         }
 
-        //Call Manager to do one POST
-        if (request.getRequestType().equals(RequestType.POST)) {
-            return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.POST);
+        //Prepare the response
+        switch (request.getRequestType()) {
+            case POST:
+                //Call ManagerAirplane to do one POST
+                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.POST);
+            case DELETE:
+                //Call ManagerAirplane to do one DELETE
+                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.DELETE);
+            case GET:
+                //Call ManagerAirplane to do one GET
+                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.GET);
+            default:
+                //Call ManagerAirplane to do one PUT
+                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.PUT);
         }
 
-        //Call Manager to do one DELETE
-        if (request.getRequestType().equals(RequestType.DELETE)) {
-            return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.DELETE);
-        }
-
-        //Call Manager to do one GET
-        if (request != null && request.getRequestType().equals(RequestType.GET)) {
-            return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.GET);
-        }
-
-        //Call Manager to do one PUT
-        return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.PUT);
     }
-
 }

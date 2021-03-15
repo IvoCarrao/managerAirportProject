@@ -66,21 +66,21 @@ public class AirportVerifier {
             return CoreResponseFactory.createCoreResponse(airport, false, requestVerifierMessage, null);
         }
 
-        //Call Manager to do one POST
-        if (request.getRequestType().equals(RequestType.POST)) {
-            return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.POST);
-        }
-        //Call Manager to do one DELETE
-        if (request.getRequestType().equals(RequestType.DELETE)) {
-            return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.DELETE);
+        //Prepare the response
+        switch (request.getRequestType()) {
+            case POST:
+                //Call ManagerAirport to do one POST
+                return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.POST);
+            case DELETE:
+                //Call ManagerAirport to do one DELETE
+                return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.DELETE);
+            case GET:
+                //Call ManagerAirport to do one GET
+                return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.GET);
+            default:
+                //Call ManagerAirport to do one PUT
+                return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.PUT);
         }
 
-        //Call Manager to do one GET
-        if (request != null && request.getRequestType().equals(RequestType.GET)) {
-            return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.GET);
-        }
-
-        //Call Manager to do one PUT
-        return CoreResponseFactory.createCoreResponse(airport, true, null, RequestType.PUT);
     }
 }
