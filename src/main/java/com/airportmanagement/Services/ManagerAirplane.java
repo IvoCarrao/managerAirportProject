@@ -1,92 +1,102 @@
 package com.airportmanagement.Services;
 
-import com.airportmanagement.InputOutput.Request;
-import com.airportmanagement.InputOutput.RequestType;
-import com.airportmanagement.InputOutput.ResponseService;
+import com.airportmanagement.ProjectUtilities.InputOutput.Request;
+import com.airportmanagement.ProjectUtilities.InputOutput.ResponseService;
 import com.airportmanagement.Model.Airplane;
 import com.airportmanagement.Model.InterfaceModel;
 import com.airportmanagement.Persistence.PersistenceAirplaneProxy;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
-import com.airportmanagement.core.AirplaneVerifier;
+import com.airportmanagement.core.AirplaneValidator;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnector;
 import com.airportmanagement.core.CoreResponse.CoreResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ManagerAirplane implements InterfaceManagerAirplane{
+public class ManagerAirplane implements InterfaceManagerAirplane {
 
-    private Request<Airplane> request;
-    private Airplane airplane;
-    private RequestType requestType;
     private final PersistenceAirplaneProxy persistenceAirplaneProxy;
-    private final ResponseService<Airplane> serviceResponseService;
+    private final ResponseService.ResponseServiceBuilder<Airplane> serviceResponseService;
 
     @Autowired
-    public ManagerAirplane(PersistenceAirplaneProxy persistenceAirplaneProxy, ResponseService<Airplane> serviceResponseService){
+    public ManagerAirplane(PersistenceAirplaneProxy persistenceAirplaneProxy, ResponseService.ResponseServiceBuilder<Airplane> serviceResponseService) {
         this.persistenceAirplaneProxy = persistenceAirplaneProxy;
         this.serviceResponseService = serviceResponseService;
     }
 
-    @Override
-    public void setRequest(Request<Airplane> request) {
-        this.request = request;
-    }
 
     @Override
-    public ResponseService<Airplane> start(){
-        ResponseService<Airplane> responseService = verifyAirplane();
+    public ResponseService<Airplane> initRequest(Request<Airplane> request) {
 
-        if (!responseService.isOperationSuccess())
-            return serviceResponseService;
+        AirplaneValidator airplaneValidator = new AirplaneValidator();
+        CoreResponse<InterfaceModel> validatorCoreResponse = airplaneValidator.validateRequest(request);
 
-        if (RequestType.POST.equals(requestType)) {
-            ResponseConnector responseConnector = persistenceAirplaneProxy.insert(airplane);
-            serviceResponseService.setRequestedObject(null);
-            serviceResponseService.setMessage(responseConnector.getError());
-            serviceResponseService.setOperationSuccess(responseConnector.isSuccess());
-            return serviceResponseService;
-        }
+        if (validatorCoreResponse.isValidRequest())
+            return callPersistenceAirplane(request);
 
-        if (RequestType.GET.equals(requestType)) {
-            Pair<ResponseConnector, Airplane> responseConnector = persistenceAirplaneProxy.findById(request.getQueryParameterValue());
-            serviceResponseService.setRequestedObject(responseConnector.getSecond());
-            serviceResponseService.setMessage(responseConnector.getFirst().getError());
-            serviceResponseService.setOperationSuccess(responseConnector.getFirst().isSuccess());
-            return serviceResponseService;
-        }
+        return buildErrorResponse(validatorCoreResponse.getMessage());
 
-        if (RequestType.DELETE.equals(requestType)) {
-            ResponseConnector responseConnector = persistenceAirplaneProxy.deleteById(request.getQueryParameterValue());
-            serviceResponseService.setRequestedObject(null);
-            serviceResponseService.setMessage(responseConnector.getError());
-            serviceResponseService.setOperationSuccess(responseConnector.isSuccess());
-            return serviceResponseService;
-        }
-
-        ResponseConnector responseConnector = persistenceAirplaneProxy.update(airplane);
-        serviceResponseService.setRequestedObject(null);
-        serviceResponseService.setMessage(responseConnector.getError());
-        serviceResponseService.setOperationSuccess(responseConnector.isSuccess());
-        return serviceResponseService;
     }
 
-    private ResponseService<Airplane> verifyAirplane() {
-        AirplaneVerifier airplaneVerifier = new AirplaneVerifier();
-        airplaneVerifier.setRequest(request);
-        CoreResponse<InterfaceModel> verifierResponse = airplaneVerifier.verifier();
-
-
-        if (!verifierResponse.isOperationSuccess()) {
-            serviceResponseService.setMessage(verifierResponse.getMessage());
-            serviceResponseService.setOperationSuccess(false);
-            return serviceResponseService;
-        }
-
-        requestType = verifierResponse.getRequestType();
-        airplane = (Airplane) verifierResponse.getRequestedObject();
-        serviceResponseService.setOperationSuccess(true);
-        return serviceResponseService;
+    private ResponseService<Airplane> buildErrorResponse(String message) {
+        return serviceResponseService
+                .isOperationSuccess(false)
+                .withMessage(message)
+                .withRequestObject(null)
+                .build();
     }
 
+    private ResponseService<Airplane> callPersistenceAirplane(Request<Airplane> request) {
+
+        switch (request.getRequestType()) {
+            case POST:
+                return addAirplane(request.getRequestBody());
+
+            case GET:
+                return getAirplaneById(request.getQueryParameterValue());
+
+            case DELETE:
+                return deleteAirplaneById(request.getQueryParameterValue());
+
+            default:
+                return updateAirplane(request.getRequestBody());
+
+        }
+    }
+
+    private ResponseService<Airplane> addAirplane(Airplane airplane) {
+        ResponseConnector responseConnectorInsert = persistenceAirplaneProxy.insert(airplane);
+        return serviceResponseService
+                .isOperationSuccess(responseConnectorInsert.isSuccess())
+                .withMessage(responseConnectorInsert.getError())
+                .withRequestObject(null)
+                .build();
+    }
+
+    private ResponseService<Airplane> getAirplaneById(Integer queryParameterValue) {
+        Pair<ResponseConnector, Airplane> responseConnectorFindById = persistenceAirplaneProxy.findById(queryParameterValue);
+        return serviceResponseService
+                .isOperationSuccess(responseConnectorFindById.getFirst().isSuccess())
+                .withMessage(responseConnectorFindById.getFirst().getError())
+                .withRequestObject(responseConnectorFindById.getSecond())
+                .build();
+    }
+
+    private ResponseService<Airplane> deleteAirplaneById(Integer queryParameterValue) {
+        ResponseConnector responseConnectorDeleteById = persistenceAirplaneProxy.deleteById(queryParameterValue);
+        return serviceResponseService
+                .isOperationSuccess(responseConnectorDeleteById.isSuccess())
+                .withMessage(responseConnectorDeleteById.getError())
+                .withRequestObject(null)
+                .build();
+    }
+
+    private ResponseService<Airplane> updateAirplane(Airplane airplane) {
+        ResponseConnector responseConnectorUpdate = persistenceAirplaneProxy.update(airplane);
+        return serviceResponseService
+                .isOperationSuccess(responseConnectorUpdate.isSuccess())
+                .withMessage(responseConnectorUpdate.getError())
+                .withRequestObject(null)
+                .build();
+    }
 }

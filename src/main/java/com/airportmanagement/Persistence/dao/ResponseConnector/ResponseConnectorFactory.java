@@ -1,6 +1,4 @@
-package com.airportmanagement.dao.ResponseConnector;
-
-import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
+package com.airportmanagement.Persistence.dao.ResponseConnector;
 
 public final class ResponseConnectorFactory {
 

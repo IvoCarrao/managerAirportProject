@@ -1,17 +1,14 @@
-package com.airportmanagement.dao;
+package com.airportmanagement.Persistence.dao;
 
 import com.airportmanagement.Model.Airplane;
-import com.airportmanagement.Model.Airport;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnectorFactory;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnectorFactory;
 import org.springframework.stereotype.Repository;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,9 +19,9 @@ public class AirplanePersistenceConnector implements InterfacePersistenceAirplan
     //insert and update are two different operations, the client choose between insert a new airplane or update one that exists
 
     //used as persistence simulator
-    private List<Airplane> airplaneList = new ArrayList<Airplane>();
+    private List<Airplane> airplaneList = new ArrayList<>();
     //utility list to rapidly verify if id already exists
-    private List<Integer> listOfIds = new ArrayList<Integer>();
+    private List<Integer> listOfIds = new ArrayList<>();
 
     /**
      * Method to insert data

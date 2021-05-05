@@ -1,6 +1,11 @@
+#configures the postgres database connection
 app:
   datasource:
-    jdbc-url: jdbc:postgresql://localhost:5432/airportmanagement
+    jdbc-url: jdbc:postgresql://localhost:5432/postgres
     usermane: postgres
     password: password
     pool-size: 30
+
+#changes tomcat port from default 8080 to 8082
+server:
+  port: 8082

@@ -1,9 +1,9 @@
-package com.airportmanagement.dao;
+package com.airportmanagement.Persistence.dao;
 
 import com.airportmanagement.Model.Airport;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnectorFactory;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnectorFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ public class AirportPersistenceConnector implements InterfacePersistenceAirportC
     //insert and update are two different operations, the client choose between insert a new airport or update one that exists
 
     //used as persistence simulator
-    private List<Airport> airportList = new ArrayList<Airport>();
+    private List<Airport> airportList = new ArrayList<>();
     //utility list to rapidly verify if id already exists
-    private List<Integer> listOfIds = new ArrayList<Integer>();
+    private List<Integer> listOfIds = new ArrayList<>();
 
     /**
      * Method to insert data
@@ -89,11 +89,11 @@ public class AirportPersistenceConnector implements InterfacePersistenceAirportC
             for (Airport port : airportList) {
                 if (port.getId().equals(id)) {
 
-                    return new Pair<ResponseConnector, Airport>(ResponseConnectorFactory.createResponseConnector(true, "found airport successfully"), port);
+                    return new Pair<>(ResponseConnectorFactory.createResponseConnector(true, "found airport successfully"), port);
                 }
             }
         }
-        return new Pair<ResponseConnector, Airport>(ResponseConnectorFactory.createResponseConnector(false, "Find failed - ID doesn't exist"), null);
+        return new Pair<>(ResponseConnectorFactory.createResponseConnector(false, "Find failed - ID doesn't exist"), null);
 
     }
 

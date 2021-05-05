@@ -1,4 +1,4 @@
-package com.airportmanagement.InputOutput;
+package com.airportmanagement.ProjectUtilities.InputOutput;
 
 import com.airportmanagement.Model.InterfaceModel;
 import org.springframework.stereotype.Component;
@@ -47,6 +47,36 @@ public class ResponseService<T extends InterfaceModel> {
     @Override
     public int hashCode() {
         return Objects.hash(requestedObject, operationSuccess);
+    }
+
+    public static class ResponseServiceBuilder<T extends InterfaceModel>{
+        private String message;
+        private boolean isOperationSuccess;
+        private T requestObject;
+
+        ResponseService<T> responseService = new ResponseService<>();
+
+       public ResponseService<T> build(){
+           responseService.setOperationSuccess(isOperationSuccess);
+           responseService.setMessage(message);
+           responseService.setRequestedObject(requestObject);
+            return responseService;
+        }
+
+        public ResponseServiceBuilder<T> isOperationSuccess(boolean success){
+           this.isOperationSuccess = success;
+           return this;
+        }
+
+        public ResponseServiceBuilder<T> withRequestObject(T requestObject){
+           this.requestObject = requestObject;
+           return this;
+        }
+
+        public ResponseServiceBuilder<T> withMessage(String message){
+           this.message = message;
+           return this;
+        }
     }
 
 }

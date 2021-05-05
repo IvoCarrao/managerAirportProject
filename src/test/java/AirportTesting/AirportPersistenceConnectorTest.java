@@ -1,9 +1,9 @@
 package AirportTesting;
 
 import com.airportmanagement.Model.Airport;
-import com.airportmanagement.dao.AirportPersistenceConnector;
+import com.airportmanagement.Persistence.dao.AirportPersistenceConnector;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnector;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

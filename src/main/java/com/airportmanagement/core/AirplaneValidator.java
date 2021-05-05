@@ -1,32 +1,26 @@
 package com.airportmanagement.core;
 
-import com.airportmanagement.InputOutput.Request;
-import com.airportmanagement.InputOutput.RequestType;
+import com.airportmanagement.ProjectUtilities.InputOutput.Request;
+import com.airportmanagement.ProjectUtilities.InputOutput.RequestType;
 import com.airportmanagement.Model.Airplane;
 import com.airportmanagement.Model.InterfaceModel;
 import com.airportmanagement.ProjectUtilities.Constants;
 import com.airportmanagement.core.CoreResponse.CoreResponse;
-import com.airportmanagement.core.CoreResponse.CoreResponseFactory;
 
 import java.time.LocalDate;
 
-public class AirplaneVerifier {
+public class AirplaneValidator {
 
-    private Request<Airplane> request;
-    private Airplane airplane;
-
-    public void setRequest(Request<Airplane> request) {
-        this.request = request;
-    }
 
     /**
-     * Verifies if the data from the Airplane is correct
+     * Verifies if the data from the Request is correct
      *
      * @return error message
      */
 
-    private String requestVerifier() {
+    private String verifyIfRequestValid(Request<Airplane> request) {
         RequestType requestType;
+        Airplane airplane;
 
         if (request == null)
             return Constants.REQUEST_IS_NULL_ERROR;
@@ -66,30 +60,22 @@ public class AirplaneVerifier {
      * @return error message
      */
 
-    public CoreResponse<InterfaceModel> verifier() {
+    public CoreResponse<InterfaceModel> validateRequest(Request<Airplane> request) {
 
+        String requestVerifierMessage = verifyIfRequestValid(request);
 
-        //Verifies if the request is valid
-        String requestVerifierMessage = requestVerifier();
-        if (!requestVerifierMessage.equals(Constants.VALID_REQUEST)) {
-            return CoreResponseFactory.createCoreResponse(null, false, requestVerifierMessage, null);
-        }
+        if (requestVerifierMessage.equals(Constants.VALID_REQUEST))
+            return new CoreResponse.CoreResponseBuilder<>()
+                    .isOperationSuccess(true)
+                    .withMessage(null)
+                    .withRequestObject(null)
+                    .build();
 
-        //Prepare the response
-        switch (request.getRequestType()) {
-            case POST:
-                //Call ManagerAirplane to do one POST
-                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.POST);
-            case DELETE:
-                //Call ManagerAirplane to do one DELETE
-                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.DELETE);
-            case GET:
-                //Call ManagerAirplane to do one GET
-                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.GET);
-            default:
-                //Call ManagerAirplane to do one PUT
-                return CoreResponseFactory.createCoreResponse(airplane, true, null, RequestType.PUT);
-        }
+        return new CoreResponse.CoreResponseBuilder<>()
+                .isOperationSuccess(false)
+                .withMessage(requestVerifierMessage)
+                .withRequestObject(null)
+                .build();
 
     }
 }

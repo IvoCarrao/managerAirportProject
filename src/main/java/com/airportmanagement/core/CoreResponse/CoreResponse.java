@@ -1,6 +1,5 @@
 package com.airportmanagement.core.CoreResponse;
 
-import com.airportmanagement.InputOutput.RequestType;
 import com.airportmanagement.Model.InterfaceModel;
 
 import java.util.Objects;
@@ -18,20 +17,12 @@ public class CoreResponse <T extends InterfaceModel>{
         CoreResponse<?> that = (CoreResponse<?>) o;
         return operationSuccess == that.operationSuccess &&
                 Objects.equals(requestedObject, that.requestedObject) &&
-                Objects.equals(message, that.message) &&
-                requestType == that.requestType;
-    }
-
-    protected CoreResponse(T requestedObject, boolean operationSuccess, String message, RequestType requestType) {
-        this.requestedObject = requestedObject;
-        this.operationSuccess = operationSuccess;
-        this.message = message;
-        this.requestType = requestType;
+                Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestedObject, operationSuccess, message, requestType);
+        return Objects.hash(requestedObject, operationSuccess, message);
     }
 
     @Override
@@ -40,19 +31,8 @@ public class CoreResponse <T extends InterfaceModel>{
                 "requestedObject=" + requestedObject +
                 ", operationSuccess=" + operationSuccess +
                 ", message='" + message + '\'' +
-                ", requestType=" + requestType +
                 '}';
     }
-
-    public RequestType getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(RequestType requestType) {
-        this.requestType = requestType;
-    }
-
-    private RequestType requestType;
 
     public T getRequestedObject() {
         return requestedObject;
@@ -62,7 +42,7 @@ public class CoreResponse <T extends InterfaceModel>{
         this.requestedObject = requestedObject;
     }
 
-    public boolean isOperationSuccess() {
+    public boolean isValidRequest() {
         return operationSuccess;
     }
 
@@ -76,6 +56,37 @@ public class CoreResponse <T extends InterfaceModel>{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public static class CoreResponseBuilder <T extends InterfaceModel>{
+
+        private T requestedObject;
+        private boolean isOperationSuccess;
+        private String message;
+
+        CoreResponse<T> coreResponse = new CoreResponse<>();
+
+        public CoreResponse<T> build(){
+            coreResponse.setOperationSuccess(isOperationSuccess);
+            coreResponse.setMessage(message);
+            coreResponse.setRequestedObject(requestedObject);
+            return coreResponse;
+        }
+
+        public CoreResponseBuilder<T> isOperationSuccess(boolean success){
+            this.isOperationSuccess = success;
+            return this;
+        }
+
+        public CoreResponseBuilder<T> withRequestObject(T requestObject){
+            this.requestedObject = requestObject;
+            return this;
+        }
+
+        public CoreResponseBuilder<T> withMessage(String message){
+            this.message = message;
+            return this;
+        }
     }
 
 }

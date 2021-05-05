@@ -2,8 +2,8 @@ package com.airportmanagement.Persistence;
 
 import com.airportmanagement.Model.Airport;
 import com.airportmanagement.ProjectUtilities.Pair;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
-import com.airportmanagement.dao.InterfacePersistenceAirportConnector;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.Persistence.dao.InterfacePersistenceAirportConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;

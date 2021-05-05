@@ -1,8 +1,8 @@
 package AirplaneTesting;
 
 import com.airportmanagement.Model.Airplane;
-import com.airportmanagement.dao.AirplanePersistenceConnector;
-import com.airportmanagement.dao.ResponseConnector.ResponseConnector;
+import com.airportmanagement.Persistence.dao.AirplanePersistenceConnector;
+import com.airportmanagement.Persistence.dao.ResponseConnector.ResponseConnector;
 import de.scravy.pair.Pair;
 import org.junit.Assert;
 import org.junit.After;

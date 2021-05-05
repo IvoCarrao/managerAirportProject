@@ -1,12 +1,10 @@
 package com.airportmanagement.Services;
 
-import com.airportmanagement.InputOutput.Request;
-import com.airportmanagement.InputOutput.ResponseService;
+import com.airportmanagement.ProjectUtilities.InputOutput.Request;
+import com.airportmanagement.ProjectUtilities.InputOutput.ResponseService;
 import com.airportmanagement.Model.Airplane;
 
 public interface InterfaceManagerAirplane {
 
-    void setRequest(Request<Airplane> request);
-
-    ResponseService<Airplane> start();
+    ResponseService<Airplane> initRequest(Request<Airplane> request);
 }

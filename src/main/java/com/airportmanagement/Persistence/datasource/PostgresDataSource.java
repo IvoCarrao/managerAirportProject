@@ -1,4 +1,4 @@
-package com.airportmanagement.datasource;
+package com.airportmanagement.Persistence.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
